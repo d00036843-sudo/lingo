@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FAF9F5">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lingo">
+<title>Lingo — переводчик по фото</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+ <symbol id="i-cam" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 8h3l1.5-2h7L17 8h3v11H4zM12 17a4 4 0 100-8 4 4 0 000 8z"/></symbol>
+ <symbol id="i-img" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 5h16v14H4zM4 16l5-5 4 4 3-3 4 4M9 9.5h.01"/></symbol>
+ <symbol id="i-txt" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M5 6h14M12 6v13M9 19h6"/></symbol>
+ <symbol id="i-his" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 12a8 8 0 108-8 8 8 0 00-6 2.7L4 9M4 4v5h5M12 8v4l3 2"/></symbol>
+ <symbol id="i-copy" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M9 9h10v11H9zM5 15V4h10"/></symbol>
+ <symbol id="i-spk" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 9v6h4l5 4V5L8 9zM16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></symbol>
+ <symbol id="i-shr" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 15V4M8 8l4-4 4 4M5 13v7h14v-7"/></symbol>
+ <symbol id="i-mic" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 15a3 3 0 003-3V6a3 3 0 00-6 0v6a3 3 0 003 3zM6 11a6 6 0 0012 0M12 17v3"/></symbol>
+ <symbol id="i-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/></symbol>
+</svg>
+
+<div class="bg" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="app">
+  <header class="top">
+    <div class="logo"><span class="spark">✺</span><b>Lingo</b></div>
+    <p class="tag">Переводчик по фото</p>
+  <nav class="tabs" id="tabs"><span class="pill" id="pill"></span>
+    <button class="tab active" data-tab="photo"><svg><use href="#i-cam"/></svg><span>Фото</span></button>
+    <button class="tab" data-tab="text"><svg><use href="#i-txt"/></svg><span>Текст</span></button>
+    <button class="tab" data-tab="history"><svg><use href="#i-his"/></svg><span>История</span></button>
+  </nav>
+    <button class="theme" id="theme" aria-label="Тема">◐</button>
+    <button class="theme gear" id="gear" aria-label="Настройки">⚙</button>
+  </header>
+
+
+  <section class="langs card">
+    <select id="src" aria-label="С языка"></select>
+    <button class="swap" id="swap" aria-label="Поменять языки">⇄</button>
+    <select id="dst" aria-label="На язык"></select>
+  </section>
+  <div class="chips" id="chips"></div>
+
+  <main>
+    <section class="panel show" id="photo">
+      <div class="grid">
+        <div class="card">
+          <div class="drop" id="drop">
+            <div class="stage" id="stage" hidden><img id="preview" alt=""><div class="scan" id="scan" hidden></div></div>
+            <div class="empty" id="empty">
+              <div class="bubble"><svg><use href="#i-img"/></svg></div>
+              <h2>Добавьте фото с текстом</h2>
+              <p>Сфотографируйте, выберите из галереи или перетащите файл сюда</p>
+            </div>
+          </div>
+          <div class="seg" id="seg" hidden><button data-v="orig" class="on">Оригинал</button><button data-v="ovl">Перевод на фото</button><button id="dl" aria-label="Скачать"><svg><use href="#i-shr"/></svg></button></div>
+          <div class="bar" id="barWrap" hidden><i id="bar"></i></div>
+          <p class="status" id="status"></p>
+          <div class="actions">
+            <button class="btn primary" id="btnCam"><svg><use href="#i-cam"/></svg>Камера</button>
+            <button class="btn" id="btnFile"><svg><use href="#i-img"/></svg>Галерея</button>
+            <button class="btn icon" id="btnClear" aria-label="Очистить"><svg><use href="#i-x"/></svg></button>
+          </div>
+          <input type="file" id="fileCam" accept="image/*" capture="environment" hidden>
+          <input type="file" id="fileGal" accept="image/*" hidden>
+        </div>
+        <div class="col">
+          <div class="card accent">
+            <h3>Перевод</h3>
+            <div class="result empty-r" id="photoRes">Перевод появится здесь</div>
+            <div class="tools">
+              <button class="btn small" data-act="copy" data-from="photoRes"><svg><use href="#i-copy"/></svg>Копировать</button>
+              <button class="btn small" data-act="speak" data-from="photoRes"><svg><use href="#i-spk"/></svg>Озвучить</button>
+              <button class="btn small" data-act="share" data-from="photoRes"><svg><use href="#i-shr"/></svg>Поделиться</button>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Распознанный текст <small>можно править</small></h3>
+            <textarea id="ocrOut" placeholder="Текст с фото появится здесь"></textarea>
+            <div class="tools"><button class="btn small" id="reTr">Перевести заново</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="text">
+      <div class="grid">
+        <div class="card">
+          <h3>Исходный текст</h3>
+          <textarea id="txtIn" placeholder="Введите или продиктуйте текст — перевод появится сам"></textarea>
+          <div class="tools">
+            <button class="btn small" id="btnPaste"><svg><use href="#i-copy"/></svg>Вставить</button>
+            <button class="btn small" id="btnMic"><svg><use href="#i-mic"/></svg>Диктовать</button>
+            <button class="btn small" id="btnTxtClear"><svg><use href="#i-x"/></svg>Очистить</button><span class="cnt" id="cnt">0 симв.</span>
+          </div>
+        </div>
+        <div class="card accent">
+          <h3>Перевод</h3>
+          <div class="result empty-r" id="txtRes">Перевод появится здесь</div>
+          <div class="tools">
+            <button class="btn small" data-act="copy" data-from="txtRes"><svg><use href="#i-copy"/></svg>Копировать</button>
+            <button class="btn small" data-act="speak" data-from="txtRes"><svg><use href="#i-spk"/></svg>Озвучить</button>
+            <button class="btn small" data-act="share" data-from="txtRes"><svg><use href="#i-shr"/></svg>Поделиться</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="history">
+      <div class="card">
+        <div class="between"><h3>История</h3><span class="tools" style="margin:0"><button class="btn small" id="histExp">Экспорт</button><button class="btn small" id="histClear">Очистить</button></span></div>
+        <input class="search" id="hq" type="search" placeholder="Поиск по истории" autocomplete="off">
+        <div id="histList"></div>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="cam" id="cam" hidden>
+  <video id="vid" playsinline autoplay muted></video>
+  <div class="camui"><button class="camx" id="camClose" aria-label="Закрыть">✕</button><button class="shutter" id="shutter" aria-label="Снять"></button><button class="livebtn" id="liveBtn">LIVE</button></div>
+  <div class="livecap" id="livecap" hidden></div>
+</div>
+<dialog id="set" class="dlg">
+  <div class="between"><h3>Настройки</h3><button class="btn icon" id="setClose" aria-label="Закрыть"><svg><use href="#i-x"/></svg></button></div>
+  <label class="row2"><span><b>Переводчик браузера</b><small>Работает офлайн, если ваш браузер его поддерживает (Chrome 138+)</small></span><input type="checkbox" id="sLocal" class="sw"></label>
+  <label class="col2"><b>Ключ Google Cloud Translation</b><small>Необязательно: самый точный официальный перевод. Ключ хранится только на этом устройстве. Ограничьте его в Google Cloud адресом вашего сайта.</small><input type="password" id="sKey" placeholder="AIza…" autocomplete="off"></label>
+  <label class="col2"><b>Распознавание текста на фото</b><select id="sOcr"><option value="best">Точно (медленнее)</option><option value="fast">Быстро</option></select></label>
+  <div class="tools"><button class="btn small primary" id="sInstall" hidden>Установить приложение</button><button class="btn small" id="sReset">Сбросить всё</button></div>
+  <p class="status">Lingo 6.0</p>
+</dialog>
+<div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
